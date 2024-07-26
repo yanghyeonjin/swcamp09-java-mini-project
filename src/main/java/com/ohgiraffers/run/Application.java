@@ -1,7 +1,11 @@
 package com.ohgiraffers.run;
 
+import com.ohgiraffers.domain.product.aggregate.Product;
+import com.ohgiraffers.domain.product.service.ProductService;
 import com.ohgiraffers.domain.supplies.aggregate.Supplies;
 import com.ohgiraffers.domain.supplies.service.SuppliesService;
+import com.ohgiraffers.exception.FailedPurchaseException;
+import com.ohgiraffers.exception.NotFoundProductException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -9,6 +13,7 @@ import java.util.Scanner;
 public class Application {
 
     private static final SuppliesService suppliesService = new SuppliesService();
+    private static final ProductService productService = new ProductService();
 
     public static void main(String[] args) {
 
@@ -16,7 +21,7 @@ public class Application {
 
         while (true) {
             System.out.println("=== 비품 관리 프로그램이 시작되었습니다. ===");
-            System.out.println("1: 비품의 재고 확인");
+            System.out.println("1: 비품 목록 확인");
             System.out.println("2: 비품 구매");
             System.out.println("3: 비품 사용");
             System.out.println("4: 법카 잔여 한도 확인");
@@ -31,6 +36,14 @@ public class Application {
                     printSupplies(foundSupplies);
                     break;
                 case 2:
+                    ArrayList<Product> foundProducts = productService.findAllProducts();
+                    printProducts(foundProducts);
+
+                    try {
+                        productService.purchase(chooseProductNo(), chooseProductQuantity());
+                    } catch (NotFoundProductException | FailedPurchaseException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 3:
                     break;
@@ -45,6 +58,34 @@ public class Application {
         }
     }
 
+    private static int chooseProductQuantity() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("구매할 수량을 입력하세요: ");
+        return scanner.nextInt();
+    }
+
+    private static int chooseProductNo() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("구매할 품목 번호를 입력하세요: ");
+        return scanner.nextInt();
+    }
+
+    // 구매 가능한 품목 리스트를 출력
+    private static void printProducts(ArrayList<Product> foundProducts) {
+        System.out.println("---- 구매 가능한 품목 리스트 ----");
+
+        for (Product product : foundProducts) {
+            int no = product.getProductNo();
+            String name = product.getProductName();
+            int price = product.getPrice();
+            String priceComma = String.format("%,d", price);
+
+            System.out.println(no + ": " + name + " (" + priceComma + "원)");
+        }
+
+        System.out.println("---- ------------ ------");
+    }
+
     // 현재 재고 리스트를 출력하는 메소드
     private static void printSupplies(ArrayList<Supplies> foundSupplies) {
         if (foundSupplies.isEmpty()) {  // 보유하고 있는 비품이 없을 때
@@ -54,13 +95,17 @@ public class Application {
             return;
         }
 
+        System.out.println("---- 현재 비품 목록 ----");
+
         for (Supplies supplies : foundSupplies) {
             int no = supplies.getSuppliesNo();
             String name = supplies.getSuppliesName();
             int quantity = supplies.getQuantity();
 
-            System.out.println("---- 현재 비품 목록 ----");
+
             System.out.println(no + ": " + name + " (재고수량: " + quantity + "개)");
         }
+
+        System.out.println("---- ------------ ------");
     }
 }

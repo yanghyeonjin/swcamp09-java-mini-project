@@ -1,17 +1,18 @@
 package com.ohgiraffers.domain.supplies.aggregate;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 
-public class Supplies {
+public class Supplies implements Serializable {
     private int suppliesNo;                 // 비품번호
     private String suppliesName;            // 비품명
     private int quantity;                   // 재고수량
-    private java.util.Date purchaseDate;    // 최근구매일
+    private LocalDate purchaseDate;    // 최근구매일
 
     public Supplies() {
     }
 
-    public Supplies(int suppliesNo, String suppliesName, int quantity, Date purchaseDate) {
+    public Supplies(int suppliesNo, String suppliesName, int quantity, LocalDate purchaseDate) {
         this.suppliesNo = suppliesNo;
         this.suppliesName = suppliesName;
         this.quantity = quantity;
@@ -42,11 +43,11 @@ public class Supplies {
         this.quantity = quantity;
     }
 
-    public Date getPurchaseDate() {
+    public LocalDate getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(Date purchaseDate) {
+    public void setPurchaseDate(LocalDate purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 

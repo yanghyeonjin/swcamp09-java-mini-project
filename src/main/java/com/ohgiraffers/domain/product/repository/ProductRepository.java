@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ProductRepository {
 
-    private ArrayList<Product> products = new ArrayList<>();
+    private final ArrayList<Product> products = new ArrayList<>();
 
     public ProductRepository() {
         // 초기 상품목록 셋팅
@@ -19,5 +19,19 @@ public class ProductRepository {
         products.add(new Product(7, "핸드워시", 3_500));
         products.add(new Product(8, "무선청소기", 300_000));
         products.add(new Product(9, "A4용지(2500매)", 26_400));
+    }
+
+    public ArrayList<Product> selectAllProducts() {
+        return products;
+    }
+
+    public Product selectProductByNo(int productNo) {
+        for (Product product : products) {
+            if (product.getProductNo() == productNo) {
+                return product;
+            }
+        }
+
+        return null;
     }
 }
