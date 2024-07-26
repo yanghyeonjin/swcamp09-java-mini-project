@@ -1,6 +1,8 @@
 package com.ohgiraffers.domain.card.aggregate;
 
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable {
     private String creditCardName;      // 카드명+번호
     private int creditCardLimit;        // 카드 한도
     private int amountOfCardUsed;       // 사용한 카드 금액

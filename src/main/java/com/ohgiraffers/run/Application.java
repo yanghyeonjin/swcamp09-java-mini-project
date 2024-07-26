@@ -1,8 +1,13 @@
 package com.ohgiraffers.run;
 
+import com.ohgiraffers.domain.card.management.CardManagement;
+
 import java.util.Scanner;
 
 public class Application {
+
+    private static final CardManagement cardManagement = new CardManagement();
+
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -25,7 +30,8 @@ public class Application {
                     break;
                 case 3:
                     break;
-                case 4:
+                case 4: cardManagement.checkCreditLimit();
+                    System.out.println();
                     break;
                 case 9:
                     System.out.println("프로그램을 종료합니다.");
