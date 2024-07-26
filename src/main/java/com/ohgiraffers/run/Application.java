@@ -1,8 +1,15 @@
 package com.ohgiraffers.run;
 
+import com.ohgiraffers.domain.supplies.aggregate.Supplies;
+import com.ohgiraffers.domain.supplies.service.SuppliesService;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Application {
+
+    private static final SuppliesService suppliesService = new SuppliesService();
+
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -20,6 +27,8 @@ public class Application {
 
             switch (menuNo) {
                 case 1:
+                    ArrayList<Supplies> foundSupplies = suppliesService.findAllSupplies();
+                    printSupplies(foundSupplies);
                     break;
                 case 2:
                     break;
@@ -33,6 +42,25 @@ public class Application {
                 default:
                     System.out.println("번호를 잘못 입력하셨습니다.");
             }
+        }
+    }
+
+    // 현재 재고 리스트를 출력하는 메소드
+    private static void printSupplies(ArrayList<Supplies> foundSupplies) {
+        if (foundSupplies.isEmpty()) {  // 보유하고 있는 비품이 없을 때
+            System.out.println("**************************");
+            System.out.println("**** 텅 ~ 아무것도 없어요 ****");
+            System.out.println("**************************");
+            return;
+        }
+
+        for (Supplies supplies : foundSupplies) {
+            int no = supplies.getSuppliesNo();
+            String name = supplies.getSuppliesName();
+            int quantity = supplies.getQuantity();
+
+            System.out.println("---- 현재 비품 목록 ----");
+            System.out.println(no + ": " + name + " (재고수량: " + quantity + "개)");
         }
     }
 }
