@@ -1,21 +1,30 @@
 package com.ohgiraffers.domain.supplies.aggregate;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 
-public class Supplies {
+public class Supplies implements Serializable {
+    private int suppliesNo;                 // 비품번호
     private String suppliesName;            // 비품명
-    private int price;                      // 비품가격
     private int quantity;                   // 재고수량
-    private java.util.Date purchaseDate;    // 최근구매일
+    private LocalDate purchaseDate;    // 최근구매일
 
     public Supplies() {
     }
 
-    public Supplies(String suppliesName, int price, int quantity, Date purchaseDate) {
+    public Supplies(int suppliesNo, String suppliesName, int quantity, LocalDate purchaseDate) {
+        this.suppliesNo = suppliesNo;
         this.suppliesName = suppliesName;
-        this.price = price;
         this.quantity = quantity;
         this.purchaseDate = purchaseDate;
+    }
+
+    public int getSuppliesNo() {
+        return suppliesNo;
+    }
+
+    public void setSuppliesNo(int suppliesNo) {
+        this.suppliesNo = suppliesNo;
     }
 
     public String getSuppliesName() {
@@ -26,14 +35,6 @@ public class Supplies {
         this.suppliesName = suppliesName;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public int getQuantity() {
         return quantity;
     }
@@ -42,19 +43,19 @@ public class Supplies {
         this.quantity = quantity;
     }
 
-    public Date getPurchaseDate() {
+    public LocalDate getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(Date purchaseDate) {
+    public void setPurchaseDate(LocalDate purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
     @Override
     public String toString() {
         return "Supplies{" +
-                "suppliesName='" + suppliesName + '\'' +
-                ", price=" + price +
+                "suppliesNo=" + suppliesNo +
+                ", suppliesName='" + suppliesName + '\'' +
                 ", quantity=" + quantity +
                 ", purchaseDate=" + purchaseDate +
                 '}';
