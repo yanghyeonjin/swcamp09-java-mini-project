@@ -39,7 +39,7 @@ public class SuppliesService {
             throw new InsufficientQuantityException("비품 수량이 충분하지 않아요.");
         }
 
-        int result = suppliesRepository.updateQuantity(useSuppliesNo, useSuppliesQuantity);
+        int result = suppliesRepository.minusQuantity(useSuppliesNo, useSuppliesQuantity);
         if (result == 1) {
             System.out.println("비품이 사용되었습니다.");
         } else {
