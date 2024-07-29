@@ -5,7 +5,9 @@ import com.ohgiraffers.domain.product.service.ProductService;
 import com.ohgiraffers.domain.supplies.aggregate.Supplies;
 import com.ohgiraffers.domain.supplies.service.SuppliesService;
 import com.ohgiraffers.exception.FailedPurchaseException;
+import com.ohgiraffers.exception.InsufficientQuantityException;
 import com.ohgiraffers.exception.NotFoundProductException;
+import com.ohgiraffers.exception.NotFoundSuppliesException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -32,20 +34,25 @@ public class Application {
 
             switch (menuNo) {
                 case 1:
-                    ArrayList<Supplies> foundSupplies = suppliesService.findAllSupplies();
-                    printSupplies(foundSupplies);
+                    searchAllSupplies();
                     break;
                 case 2:
                     ArrayList<Product> foundProducts = productService.findAllProducts();
                     printProducts(foundProducts);
 
                     try {
-                        productService.purchase(chooseProductNo(), chooseProductQuantity());
+                        productService.purchase(chooseProductNo("구매할 "), chooseProductQuantity("구매할 "));
                     } catch (NotFoundProductException | FailedPurchaseException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
                 case 3:
+                    searchAllSupplies();
+                    try {
+                        suppliesService.useSupplies(chooseProductNo("사용할 "), chooseProductQuantity("사용할 "));
+                    } catch (NotFoundSuppliesException | InsufficientQuantityException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 4:
                     break;
@@ -58,15 +65,20 @@ public class Application {
         }
     }
 
-    private static int chooseProductQuantity() {
+    private static void searchAllSupplies() {
+        ArrayList<Supplies> foundSupplies = suppliesService.findAllSupplies();
+        printSupplies(foundSupplies);
+    }
+
+    private static int chooseProductQuantity(String prefixStr) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("구매할 수량을 입력하세요: ");
+        System.out.print(prefixStr + "수량을 입력하세요: ");
         return scanner.nextInt();
     }
 
-    private static int chooseProductNo() {
+    private static int chooseProductNo(String prefixStr) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("구매할 품목 번호를 입력하세요: ");
+        System.out.print(prefixStr + "품목 번호를 입력하세요: ");
         return scanner.nextInt();
     }
 
