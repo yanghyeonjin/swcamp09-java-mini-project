@@ -22,13 +22,15 @@ public class CardRepository {
         loadCard(file);
     }
 
-    public void updateLimit(int totalPayment) {
-        CardRepository myCard = new CardRepository();
+    public void updateAccum(int totalPayment) {
         int remainingLimit;     // 잔여한도 저장
 
-        myCard.selectMyCard().setAmountOfCardUsed(totalPayment);
-        remainingLimit = myCard.selectMyCard().getCreditCardLimit() - myCard.selectMyCard().getAmountOfCardUsed();
-        myCard.selectMyCard().setCreditCardLimit(remainingLimit);
+        selectMyCard().setAmountOfCardUsed(selectMyCard().getAmountOfCardUsed() + totalPayment);
+        remainingLimit = selectMyCard().getCreditCardLimit() - selectMyCard().getAmountOfCardUsed();
+
+        // 파일에도 저장
+        File file = new File("src/main/java/com/ohgiraffers/domain/card/db/cardDB.dat");
+        saveCard(file, cardHashSet);
     }
 
     private void loadCard(File file) {                          // 파일로부터 카드 정보 불러오기

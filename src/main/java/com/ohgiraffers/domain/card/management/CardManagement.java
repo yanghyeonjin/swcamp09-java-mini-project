@@ -25,6 +25,6 @@ public class CardManagement {
     }
 
     public void subtractCreditLimit(int billing) {
-        cardRepo.updateLimit(billing);
+        cardRepo.updateAccum(billing);
     }
 }
