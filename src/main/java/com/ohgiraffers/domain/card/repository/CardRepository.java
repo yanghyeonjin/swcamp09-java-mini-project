@@ -1,7 +1,6 @@
 package com.ohgiraffers.domain.card.repository;
 
 import com.ohgiraffers.domain.card.aggregate.Card;
-import com.ohgiraffers.domain.product.repository.ProductRepository;
 
 import java.io.*;
 import java.util.HashSet;
@@ -9,33 +8,27 @@ import java.util.Iterator;
 
 public class CardRepository {
 
-    private HashSet<Card> cardSet = new HashSet<>();    // 카드를 HashSet에 저장
+    private final HashSet<Card> cardHashSet = new HashSet<>();    // 카드를 HashSet에 저장
 
     public CardRepository() {
 
         File file = new File("src/main/java/com/ohgiraffers/domain/card/db/cardDB.dat");
         if (!file.exists()) {
-            HashSet<Card> defaultCard = new HashSet<>();
-            defaultCard.add(new Card("국민9120", 1000000, 0));
+            cardHashSet.add(new Card("국민9120", 1000000, 0));
 
-            saveCard(file, defaultCard);
+            saveCard(file, cardHashSet);
         }
 
         loadCard(file);
     }
 
-    public static int updateLimit(int productNo, int quantity) {
-        ProductRepository purchasedProduct = new ProductRepository();
+    public void updateLimit(int totalPayment) {
         CardRepository myCard = new CardRepository();
         int remainingLimit;     // 잔여한도 저장
-        int totalPrice;         // 비품 구매금액
 
-        totalPrice = purchasedProduct.selectProductByNo(productNo).getPrice() * quantity;
-        myCard.selectMyCard().setAmountOfCardUsed(++totalPrice);
+        myCard.selectMyCard().setAmountOfCardUsed(totalPayment);
         remainingLimit = myCard.selectMyCard().getCreditCardLimit() - myCard.selectMyCard().getAmountOfCardUsed();
         myCard.selectMyCard().setCreditCardLimit(remainingLimit);
-
-        return remainingLimit;
     }
 
     private void loadCard(File file) {                          // 파일로부터 카드 정보 불러오기
@@ -44,7 +37,7 @@ public class CardRepository {
             cardInputStream = new ObjectInputStream(new FileInputStream(file));
 
             while (true) {
-                cardSet.add((Card) cardInputStream.readObject());
+                cardHashSet.add((Card) cardInputStream.readObject());
             }
 
         } catch (EOFException e){
@@ -83,15 +76,12 @@ public class CardRepository {
     }
 
     public Card selectMyCard() {
-        Iterator<Card> iterator = cardSet.iterator();
+        Iterator<Card> iterator = cardHashSet.iterator();
         while (iterator.hasNext()) {
             return iterator.next();
         }
 
         return null;
     }
-
-    // 비품 구매 발생에 따라 사용한 카드 금액 update 로직 필요
-
 
 }

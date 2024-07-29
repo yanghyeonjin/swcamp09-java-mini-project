@@ -1,8 +1,6 @@
 package com.ohgiraffers.domain.product.service;
 
-import com.ohgiraffers.domain.card.aggregate.Card;
 import com.ohgiraffers.domain.card.management.CardManagement;
-import com.ohgiraffers.domain.card.repository.CardRepository;
 import com.ohgiraffers.domain.product.aggregate.Product;
 import com.ohgiraffers.domain.product.repository.ProductRepository;
 import com.ohgiraffers.domain.supplies.service.SuppliesService;
@@ -34,14 +32,13 @@ public class ProductService {
         // 2. 법카 한도를 초과하는지 체크
         int totalPrice = selectedProduct.getPrice() * quantity;
         // 2-예외. 법카 한도를 초과하면 구매 불가 fail
-        
         int cardLimit = cardManagement.getCreditCardLimit();    // 잔여 한도
         if (totalPrice > cardLimit) {
             throw new FailedPurchaseException("카드 한도 초과로 구매가 불가합니다.");
         }
 
         // 3. 법카 사용한도를 추가한다.
-        CardRepository.updateLimit(productNo, quantity);
+        cardManagement.subtractCreditLimit(totalPrice);
 
         // 4. 비품 목록에 구매한 비품을 추가한다.
         int result = suppliesService.AddSupplies(selectedProduct, quantity);
