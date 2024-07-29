@@ -149,14 +149,17 @@ public class SuppliesRepository {
 
     // 특정 비품의 재고 수량을 증가시킨다.
     public int increaseSuppliesQuantity(int suppliesNo, int quantity) {
-        // 컬렉션 수정
+        return 0;
+    }
+
+    public int updateQuantity(int useSuppliesNo, int useSuppliesQuantity) {
+        // 1. 컬렉션 바꾸고
         for (Supplies supplies : allSupplies) {
-            if (supplies.getSuppliesNo() == suppliesNo) {
-                supplies.setQuantity(supplies.getQuantity() + quantity);
+            if (supplies.getSuppliesNo() == useSuppliesNo) {
+                supplies.setQuantity(supplies.getQuantity() - useSuppliesQuantity);
 
-                // 파일 수정
+                // 2. 파일 최신화
                 saveToFile(allSupplies, true);
-
                 return 1;
             }
         }
