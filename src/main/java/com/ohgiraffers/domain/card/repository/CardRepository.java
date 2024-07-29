@@ -1,6 +1,7 @@
 package com.ohgiraffers.domain.card.repository;
 
 import com.ohgiraffers.domain.card.aggregate.Card;
+import com.ohgiraffers.domain.product.repository.ProductRepository;
 
 import java.io.*;
 import java.util.HashSet;
@@ -9,8 +10,6 @@ import java.util.Iterator;
 public class CardRepository {
 
     private HashSet<Card> cardSet = new HashSet<>();    // 카드를 HashSet에 저장
-
-    public int remainingLimit;      // 잔여 한도(카드 한도 - 사용한 카드 금액)를 담을 변수
 
     public CardRepository() {
 
@@ -23,6 +22,20 @@ public class CardRepository {
         }
 
         loadCard(file);
+    }
+
+    public static int updateLimit(int productNo, int quantity) {
+        ProductRepository purchasedProduct = new ProductRepository();
+        CardRepository myCard = new CardRepository();
+        int remainingLimit;     // 잔여한도 저장
+        int totalPrice;         // 비품 구매금액
+
+        totalPrice = purchasedProduct.selectProductByNo(productNo).getPrice() * quantity;
+        myCard.selectMyCard().setAmountOfCardUsed(++totalPrice);
+        remainingLimit = myCard.selectMyCard().getCreditCardLimit() - myCard.selectMyCard().getAmountOfCardUsed();
+        myCard.selectMyCard().setCreditCardLimit(remainingLimit);
+
+        return remainingLimit;
     }
 
     private void loadCard(File file) {                          // 파일로부터 카드 정보 불러오기

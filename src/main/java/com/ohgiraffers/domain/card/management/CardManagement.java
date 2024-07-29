@@ -3,15 +3,12 @@ package com.ohgiraffers.domain.card.management;
 import com.ohgiraffers.domain.card.aggregate.Card;
 import com.ohgiraffers.domain.card.repository.CardRepository;
 
-import java.util.HashSet;
-
 public class CardManagement {
 
     private final CardRepository cardRepo = new CardRepository();
 
     public CardManagement() {
     }
-
 
     public void checkCreditLimit() {
         Card selectedCard = cardRepo.selectMyCard();
