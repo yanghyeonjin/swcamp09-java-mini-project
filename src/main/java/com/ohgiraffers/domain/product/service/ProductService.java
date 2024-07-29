@@ -1,6 +1,7 @@
 package com.ohgiraffers.domain.product.service;
 
 import com.ohgiraffers.domain.card.aggregate.Card;
+import com.ohgiraffers.domain.card.management.CardManagement;
 import com.ohgiraffers.domain.card.repository.CardRepository;
 import com.ohgiraffers.domain.product.aggregate.Product;
 import com.ohgiraffers.domain.product.repository.ProductRepository;
@@ -15,6 +16,8 @@ public class ProductService {
     private final ProductRepository productRepository = new ProductRepository();
 
     private final SuppliesService suppliesService = new SuppliesService();
+
+    private final CardManagement cardManagement = new CardManagement();
 
     public ArrayList<Product> findAllProducts() {
         return productRepository.selectAllProducts();
@@ -31,8 +34,9 @@ public class ProductService {
         // 2. 법카 한도를 초과하는지 체크
         int totalPrice = selectedProduct.getPrice() * quantity;
         // 2-예외. 법카 한도를 초과하면 구매 불가 fail
-        CardRepository paymentCard = new CardRepository();
-        if (totalPrice > paymentCard.selectMyCard().getCreditCardLimit()) {
+        
+        int cardLimit = cardManagement.getCreditCardLimit();    // 잔여 한도
+        if (totalPrice > cardLimit) {
             throw new FailedPurchaseException("카드 한도 초과로 구매가 불가합니다.");
         }
 

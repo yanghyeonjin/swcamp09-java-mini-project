@@ -21,4 +21,9 @@ public class CardManagement {
         }
 
     }
+
+    public int getCreditCardLimit() {
+        // 나의 법카의 잔여 한도를 가져오는 부분
+        return cardRepo.selectMyCard().getCreditCardLimit() - cardRepo.selectMyCard().getAmountOfCardUsed();
+    }
 }
